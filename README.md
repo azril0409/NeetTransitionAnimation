@@ -36,7 +36,7 @@ public void onCreate(Bundle savedInstanceState) {
 	manager = NeetTransitionSystem.createInstance(this);
 }
 
-public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+public void onActivityCreated(Bundle savedInstanceState) {
 	super.onActivityCreated(savedInstanceState);
 	manager.onAfterCreateView(savedInstanceState);
 }
