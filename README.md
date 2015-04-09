@@ -1,0 +1,5 @@
+# NeetTransitionAnimation
+NeetTransitionAnimation是一款Android用的轉場動畫，
+支援Android 3.0以上，
+透過Activity與Activity、Fragment與Activity共同的View，
+
