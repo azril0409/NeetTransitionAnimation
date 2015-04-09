@@ -6,7 +6,7 @@ import android.widget.ImageView;
 /**
  * Created by Deo on 2015/3/27.
  */
-public class Transition extends Data{	
+class Transition extends Data{	
 	/**
 	 * 
 	 */

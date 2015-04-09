@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 /**
- * Created by Deo-chainmeans on 2015/3/25.
+ * Created by Deo on 2015/3/25.
  */
 public class NeetTransitionActivityV4Manager extends BaseManager {
     private FragmentActivity activity;
@@ -21,7 +22,7 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
     }
 
     @Override
-    public void startActivity(Intent intent, int... rids) {
+    public void startActivity(@NonNull Intent intent, int... rids) {
         ArrayList<Transition> ts = new ArrayList<Transition>();
         ArrayList<Data> datas = new ArrayList<Data>();
         for (int rid : rids) {
@@ -45,15 +46,13 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
     }
 
     @Override
-    public void addFragment(int rid,Fragment fragment,int... rids){
+    public void addFragment(int rid,@NonNull Fragment fragment,int... rids){
         ArrayList<Transition> ts = new ArrayList<Transition>();
         ArrayList<Data> datas = new ArrayList<Data>();
         for(int id : rids){
             View v = activity.findViewById(id);
             if(v==null){continue;}
-            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){
-            	continue;
-            }
+            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
             Transition t = createTransition(activity,v);
             if(t !=null){
             	ts.add(t);
@@ -78,9 +77,7 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
 
     @Override
     public void onAfterCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            return;
-        }
+        if (savedInstanceState != null) {return;}
         View contentView = null;
     	int fragmentid = activity.getIntent().getIntExtra(FRAGMENTID, -1);
     	if(fragmentid>0){

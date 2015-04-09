@@ -6,11 +6,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 /**
- * Created by Deo-chainmeans on 2015/3/25.
+ * Created by Deo on 2015/3/25.
  */
 public class NeetTransitionActivityManager extends BaseManager {
     private Activity activity;
@@ -20,7 +21,7 @@ public class NeetTransitionActivityManager extends BaseManager {
     }
 
     @Override
-    public void startActivity(Intent intent, int... rids) {
+    public void startActivity(@NonNull Intent intent,int... rids) {
         ArrayList<Transition> ts = new ArrayList<Transition>();
         ArrayList<Data> datas = new ArrayList<Data>();
         for (int rid : rids) {

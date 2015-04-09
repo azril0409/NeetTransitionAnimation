@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by Deo-chainmeans on 2015/3/30.
+ * Created by Deo on 2015/3/30.
  */
 public interface NeetTransitionManager {
     public final static int REQUEST_CODE = 0x1547;

@@ -18,7 +18,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -32,7 +31,7 @@ import android.widget.TextView;
  * Created by Deo on 2015/4/2.
  */
 class Scene {
-    Transition transition;
+    final Transition transition;
     private ViewGroup layout;
     private Animator.AnimatorListener listener;
     
@@ -75,12 +74,12 @@ class Scene {
         }
     }
 
-    public void add(Context context) {
+    public void addWindow(Context context) {
         final WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         manager.addView(layout, getWindowLayoutParams());
     }
 
-    public void reomve(Context context) {
+    public void reomveWindow(Context context) {
         try {
             WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
             manager.removeView(layout);
@@ -90,22 +89,19 @@ class Scene {
 
     @SuppressWarnings("deprecation")
 	@SuppressLint("NewApi") 
-    public void runAnimation(final @NonNull Context context, final @NonNull View contentView,long duration) {
-        final WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(metrics);
-        View moveView = layout.findViewById(transition.id);
+    public void runAnimation(@NonNull Context context, @NonNull View contentView,long duration) {
+    	final View moveView = layout.findViewById(transition.id);
         if(moveView==null){
-        	reomve(context);
+        	reomveWindow(context);
         	return;
         }
         final View nowView = contentView.findViewById(transition.id);
         if(nowView==null){
-        	reomve(context);
+        	reomveWindow(context);
         	return;
         }
         if(nowView.getPaddingLeft()!=0||nowView.getPaddingTop()!=0||nowView.getPaddingRight()!=0||nowView.getPaddingBottom()!=0){
-        	reomve(context);
+        	reomveWindow(context);
         	return;
         }
         Rect newViewRect = BaseManager.getWindowRect((Activity)context,nowView);
@@ -115,13 +111,13 @@ class Scene {
             moveView.setBackgroundDrawable(nowView.getBackground());
         }
         AnimatorSet set = new AnimatorSet();
-        int formLeft = (int) (moveView.getLeft());
+        int formLeft = moveView.getLeft();
         int toLeft = newViewRect.left;
-        int formRight = (int) (moveView.getRight());
+        int formRight = moveView.getRight();
         int toRight = newViewRect.right;
-        int formTop = (int) (moveView.getTop());
+        int formTop = moveView.getTop();
         int toTop = newViewRect.top;
-        int formBottom = (int) (moveView.getBottom());
+        int formBottom = moveView.getBottom();
         int toBottom = newViewRect.bottom;
         ObjectAnimator al = ObjectAnimator.ofInt(moveView, "left", formLeft, toLeft).setDuration(duration);
         ObjectAnimator ar = ObjectAnimator.ofInt(moveView, "right", formRight, toRight).setDuration(duration);
@@ -133,7 +129,7 @@ class Scene {
             ObjectAnimator ai = ObjectAnimator.ofObject(moveView, "imageBitmap", new TypeEvaluator<Bitmap>() {
                 @Override
                 public Bitmap evaluate(float fraction, Bitmap startValue, Bitmap endValue) {
-                    return fraction > 0.5 ? endValue : startValue;
+                    return endValue;
                 }
             }, bitmap, bitmap).setDuration(duration);
             set.play(al).with(ar).with(at).with(ab).with(ai);
@@ -142,24 +138,20 @@ class Scene {
             ObjectAnimator aTextColor = ObjectAnimator.ofObject(textView, "textColor", new TypeEvaluator<Integer>() {
                 @Override
                 public Integer evaluate(float fraction, Integer startValue, Integer endValue) {
-                    try {
-                        int sa = Color.alpha(startValue);
-                        int sr = Color.red(startValue);
-                        int sg = Color.green(startValue);
-                        int sb = Color.blue(startValue);
-                        int ea = Color.alpha(endValue);
-                        int er = Color.red(endValue);
-                        int eg = Color.green(endValue);
-                        int eb = Color.blue(endValue);
-                        int a = (int) (sa + (ea - sa) * fraction);
-                        int r = (int) (sr + (er - sr) * fraction);
-                        int g = (int) (sg + (eg - sg) * fraction);
-                        int b = (int) (sb + (eb - sb) * fraction);
-                        int color = Color.argb(a, r, g, b);
-                        return color;
-                    } catch (Exception e) {
-                    }
-                    return fraction < 0.5 ? startValue : endValue;
+                	int sa = Color.alpha(startValue);
+                	int sr = Color.red(startValue);
+                	int sg = Color.green(startValue);
+                	int sb = Color.blue(startValue);
+                	int ea = Color.alpha(endValue);
+                	int er = Color.red(endValue);
+                	int eg = Color.green(endValue);
+                	int eb = Color.blue(endValue);
+                	int a = (int) (sa + (ea - sa) * fraction);
+                	int r = (int) (sr + (er - sr) * fraction);
+                	int g = (int) (sg + (eg - sg) * fraction);
+                	int b = (int) (sb + (eb - sb) * fraction);
+                	int color = Color.argb(a, r, g, b);
+                	return color;
                 }
             }, transition.textColor, ((TextView) nowView).getCurrentTextColor()).setDuration(duration);
             ObjectAnimator moveAlpha = ObjectAnimator.ofFloat(moveView, "alpha", 1f,0f).setDuration(300);

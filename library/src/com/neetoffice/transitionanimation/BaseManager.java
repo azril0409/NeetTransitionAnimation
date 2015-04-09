@@ -27,15 +27,18 @@ import android.widget.TextView;
 abstract class BaseManager implements NeetTransitionManager {
 	final static String DATAS = "com.neetoffice.transitionanimation_bnjvgydvtge_";
     final static String FRAGMENTID = "com.neetoffice.transitionanimation_nhht5wedbde_";
-    static ArrayList<Scene> scenes;
-    long duration=1000;
+    protected static ArrayList<Scene> scenes;
+    private final Handler handler = new Handler();
+    private long duration=1000;
+    
+    abstract Bundle getBundle();
+    abstract Resources getResources();
     
     public void setDuration(long duration){
     	this.duration = duration;
     };
 
     void runAnimation(final @NonNull Context context, @NonNull final View contentView){
-    	final Handler handler = new Handler();
     	if(scenes==null||scenes.size()==0){return;}
     	for(Scene scene : scenes){
     		View v = contentView.findViewById(scene.transition.id);
@@ -47,7 +50,7 @@ abstract class BaseManager implements NeetTransitionManager {
                 if(contentView.getMeasuredHeight()>0){
                 	for(Scene scene : scenes){
                     	scene.setListener(new Listener(context.getApplicationContext(),scene,contentView));
-                        scene.runAnimation(context,contentView,duration);
+                        scene.runAnimation(context.getApplicationContext(),contentView,duration);
                     }
                 }else{
                     handler.post(this);
@@ -56,19 +59,17 @@ abstract class BaseManager implements NeetTransitionManager {
         });
     }
     
-    abstract Bundle getBundle();
-    abstract Resources getResources();
     
     @Override
     public Drawable getImageFromId(int viewId) {
     	Drawable drawable = null;
-    	@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		ArrayList<Data> datas = (ArrayList<Data>) getBundle().getSerializable(DATAS);
         if(datas!=null){
         	for(Data data:datas){
-            	if(data.id == viewId&&data.image!=null){
-            		if(data.image!=null){
-            			drawable = new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(data.image, 0, data.image.length));
+        		if(data.id == viewId){
+        			if(data.image!=null){
+        				drawable = new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(data.image, 0, data.image.length));
             		}
             		break;
             	}
@@ -101,16 +102,14 @@ abstract class BaseManager implements NeetTransitionManager {
     		this.context = context;
     		this.scene = scene;
     		this.contentView = contentView;            
-    	}
-    	
+    	}    	
 		@Override
 		public void onAnimationStart(Animator animation) {
 		}
-
 		@Override
 		public void onAnimationEnd(Animator animation) {
 			scenes.remove(scene);
-			scene.reomve(context);
+			scene.reomveWindow(context);
 			View v = contentView.findViewById(scene.transition.id);
 			if(v!=null){v.setVisibility(View.VISIBLE);}
 		}
@@ -122,12 +121,12 @@ abstract class BaseManager implements NeetTransitionManager {
 		}
     };
     
-    static void addWindowView(Context context,View contentView,ArrayList<Transition> transitions){    	
+    static void addWindowView(@NonNull Context context,@NonNull View contentView,@NonNull ArrayList<Transition> transitions){    	
         scenes = new ArrayList<Scene>();
         for(Transition transition:transitions){
             Scene scene = new Scene(transition);
             scene.createView(context);
-            scene.add(context);
+            scene.addWindow(context);
             scenes.add(scene);
         }
     }
@@ -167,8 +166,7 @@ abstract class BaseManager implements NeetTransitionManager {
         return new Rect(left, top, right, bottom);
     }
 
-    static Transition createTransition(Activity activity,View chileView) {
-    	if(chileView==null){return null;}
+    static Transition createTransition(@NonNull Activity activity,@NonNull View chileView) {
         Transition transition = new Transition();
         Rect rect = getWindowRect(activity,chileView);
         transition.id = chileView.getId();
@@ -196,47 +194,21 @@ abstract class BaseManager implements NeetTransitionManager {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-	static ArrayList<Transition> beforeFinish(Activity activity,Bundle bundle, View contentView) {
+	static ArrayList<Transition> beforeFinish(@NonNull Activity activity,@NonNull Bundle bundle,@NonNull View contentView) {
         ArrayList<Transition> ts = new ArrayList<Transition>();
-        if (bundle != null) {
-            ArrayList<Data> datas = (ArrayList<Data>) bundle.getSerializable(DATAS);
-            if(datas!=null){
-                for (Data data : datas) {
-                    final View v = contentView.findViewById(data.id);
-                    if(v==null){continue;}
-                    Transition t = createTransition(activity, v);
-                    if(t !=null){
-                    	ts.add(t);
-                    }
-                }
-            }
+        @SuppressWarnings("unchecked")
+        ArrayList<Data> datas = (ArrayList<Data>) bundle.getSerializable(DATAS);
+        if(datas!=null){
+        	for (Data data : datas) {
+        		final View v = contentView.findViewById(data.id);
+        		if(v==null){continue;}
+        		Transition t = createTransition(activity, v);
+        		if(t !=null){
+        			ts.add(t);
+        		}
+        	}            
         }
         return ts;
-    }
-
-    static int[] getRange(View chileView) {
-        int defaultHeight = 0;
-        int defaultWeight = 0;
-        View view = chileView;
-        do {
-            View parentView = (View) view.getParent();
-            if (parentView.getId() != android.R.id.content) {
-                int height = view.getTop() - parentView.getTop();
-                defaultHeight += height;
-            } else {
-                int height = parentView.getTop() - view.getTop();
-                defaultHeight += height;
-            }
-            int weight = parentView.getLeft() - view.getLeft();
-            defaultWeight += weight;
-            view = parentView;
-        } while (view.getId() != android.R.id.content);
-        int left = chileView.getLeft()+defaultWeight;
-        int right = chileView.getRight()+defaultWeight;
-        int top = chileView.getTop() + defaultHeight;
-        int bottom = chileView.getBottom() + defaultHeight;
-        return new int[]{left, top, right, bottom};
     }
 
     static byte[] bitmap2ByteArrayBitmap(Bitmap bitmap) {

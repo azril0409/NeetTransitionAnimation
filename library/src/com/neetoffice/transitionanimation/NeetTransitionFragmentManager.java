@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 /**
- * Created by Deo-chainmeans on 2015/3/25.
+ * Created by Deo on 2015/3/25.
  */
 public class NeetTransitionFragmentManager extends BaseManager {
     private Fragment fragment;
@@ -21,7 +22,7 @@ public class NeetTransitionFragmentManager extends BaseManager {
         this.fragment = fragment;
     }
 
-    public void startActivity(Intent intent, int... rids) {
+    public void startActivity(@NonNull Intent intent, int... rids) {
         ArrayList<Transition> ts = new ArrayList<Transition>();
         ArrayList<Data> datas = new ArrayList<Data>();
         for (int rid : rids) {
@@ -46,7 +47,7 @@ public class NeetTransitionFragmentManager extends BaseManager {
     }
 
     @Override
-    public void addFragment(int rid, Fragment fragment, int... rids) {
+    public void addFragment(int rid,@NonNull Fragment fragment, int... rids) {
         ArrayList<Transition> ts = new ArrayList<Transition>();
         ArrayList<Data> datas = new ArrayList<Data>();
         for(int id : rids){
@@ -83,13 +84,14 @@ public class NeetTransitionFragmentManager extends BaseManager {
         View contentView = fragment.getView();
         runAnimation(fragment.getActivity(),contentView);
     }
-
+    
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if(requestCode==REQUEST_CODE){
             View contentView = null;
-            Bundle bundle = fragment.getArguments();
-            if(bundle!=null){
-            	int fragmentid = bundle.getInt(FRAGMENTID, -1);
+            Bundle argument = fragment.getArguments();
+            if(argument!=null){
+            	int fragmentid = argument.getInt(FRAGMENTID, -1);
             	if(fragmentid>0){
             		Fragment f = fragment.getFragmentManager().findFragmentById(fragmentid);
             		contentView = f.getView();
@@ -114,7 +116,7 @@ public class NeetTransitionFragmentManager extends BaseManager {
                 for(Data data:datas){
                 	View v = fragment.getView().findViewById(data.id);
                 	if(v==null){continue;}
-                	Transition t=createTransition(fragment.getActivity(),v);
+                	Transition t = createTransition(fragment.getActivity(),v);
                 	if(t!=null){
                 		ts.add(t);
                     }

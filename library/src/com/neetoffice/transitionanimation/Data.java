@@ -2,6 +2,9 @@ package com.neetoffice.transitionanimation;
 
 import java.io.Serializable;
 
+/**
+ * Created by Deo on 2015/3/25.
+ */
 class Data implements Serializable{
 	/**
 	 * 
