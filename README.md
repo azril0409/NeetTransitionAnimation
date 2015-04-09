@@ -9,20 +9,43 @@ NeetTransitionAnimation是一款Android用的轉場動畫，<br/>
 API 11+
 ## Usage
 ###Activity:<br/>
-  ```
-  NeetTransitionManager manager;
-  
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-      ...
-      manager = NeetTransitionSystem.createInstance(this);
-       manager.onAfterCreateView(savedInstanceState);
-  }
-  
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    ...
-    manager.onActivityResult(requestCode, resultCode, data);
-  }
+```
+NeetTransitionManager manager;
+
+public void onCreate(Bundle savedInstanceState) {
+  super.onCreate(savedInstanceState);
+  ...
+  manager = NeetTransitionSystem.createInstance(this);
+  manager.onAfterCreateView(savedInstanceState);
+}
+
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  super.onActivityResult(requestCode, resultCode, data);
+  manager.onActivityResult(requestCode, resultCode, data);
+}
 ```
 ###Fragment
+```
+NeetTransitionManager manager;
+
+public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	...
+	manager = NeetTransitionSystem.createInstance(this);
+}
+
+public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+	super.onActivityCreated(savedInstanceState);
+	manager.onAfterCreateView(savedInstanceState);
+}
+
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	manager.onActivityResult(requestCode, resultCode, data);
+}
+
+public void onDestroyView() {
+	manager.beforeFinish();
+	super.onDestroyView();
+}
+```
