@@ -50,7 +50,7 @@ abstract class BaseManager implements NeetTransitionManager {
                 if(contentView.getMeasuredHeight()>0){
                 	for(Scene scene : scenes){
                     	scene.setListener(new Listener(context.getApplicationContext(),scene,contentView));
-                        scene.runAnimation(context.getApplicationContext(),contentView,duration);
+                        scene.runAnimation(context,contentView,duration);
                     }
                 }else{
                     handler.post(this);
