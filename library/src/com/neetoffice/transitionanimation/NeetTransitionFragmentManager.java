@@ -28,8 +28,7 @@ public class NeetTransitionFragmentManager extends BaseManager {
         for (int rid : rids) {
             View v = fragment.getView().findViewById(rid);
             if(v==null){continue;}
-            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
-            Transition t = createTransition(fragment.getActivity(),v);
+        	Transition t = createTransition(fragment.getActivity(),v);
             if(t !=null){
             	ts.add(t);
             	Data data = new Data();
@@ -53,8 +52,7 @@ public class NeetTransitionFragmentManager extends BaseManager {
         for(int id : rids){
             View v =  this.fragment.getView().findViewById(id);
             if(v==null){continue;}
-            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
-            Transition t = createTransition(this.fragment.getActivity(),v);
+        	Transition t = createTransition(this.fragment.getActivity(),v);
             if(t !=null){
             	ts.add(t);
             	Data data = new Data();

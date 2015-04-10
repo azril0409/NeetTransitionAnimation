@@ -100,10 +100,6 @@ class Scene {
         	reomveWindow(context);
         	return;
         }
-        if(nowView.getPaddingLeft()!=0||nowView.getPaddingTop()!=0||nowView.getPaddingRight()!=0||nowView.getPaddingBottom()!=0){
-        	reomveWindow(context);
-        	return;
-        }
         Rect newViewRect = BaseManager.getWindowRect((Activity)context,nowView);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             moveView.setBackground(nowView.getBackground());
@@ -119,6 +115,7 @@ class Scene {
         int toTop = newViewRect.top;
         int formBottom = moveView.getBottom();
         int toBottom = newViewRect.bottom;
+        moveView.setPadding(nowView.getPaddingLeft(), nowView.getPaddingTop(), nowView.getPaddingRight(), nowView.getPaddingBottom());
         ObjectAnimator al = ObjectAnimator.ofInt(moveView, "left", formLeft, toLeft).setDuration(duration);
         ObjectAnimator ar = ObjectAnimator.ofInt(moveView, "right", formRight, toRight).setDuration(duration);
         ObjectAnimator at = ObjectAnimator.ofInt(moveView, "top", formTop, toTop).setDuration(duration);
@@ -154,11 +151,11 @@ class Scene {
                 	return color;
                 }
             }, transition.textColor, ((TextView) nowView).getCurrentTextColor()).setDuration(duration);
-            ObjectAnimator moveAlpha = ObjectAnimator.ofFloat(moveView, "alpha", 1f,0f).setDuration(300);
-            ObjectAnimator nowAlpha = ObjectAnimator.ofFloat(nowView, "alpha", 0f,1f).setDuration(300);
-            set.play(al).with(ar).with(at).with(ab).with(aTextColor).before(moveAlpha).before(nowAlpha);
+            ObjectAnimator moveAlpha = ObjectAnimator.ofFloat(moveView, "alpha", 1f,0f).setDuration(100);
+            ObjectAnimator nowAlpha = ObjectAnimator.ofFloat(nowView, "alpha", 0f,1f).setDuration(100);
             nowView.setAlpha(0f);
             nowView.setVisibility(View.VISIBLE);
+            set.play(al).with(ar).with(at).with(ab).with(aTextColor).before(moveAlpha).before(nowAlpha);
         }
         set.addListener(listener);
         set.start();

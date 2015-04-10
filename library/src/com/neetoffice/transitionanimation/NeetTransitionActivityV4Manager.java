@@ -28,8 +28,7 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
         for (int rid : rids) {
             View v = activity.findViewById(rid);
             if(v==null){continue;}
-            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
-            Transition t = createTransition(activity,v);
+        	Transition t = createTransition(activity,v);
             if(t !=null){
             	ts.add(t);
                 Data data = new Data();
@@ -52,8 +51,7 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
         for(int id : rids){
             View v = activity.findViewById(id);
             if(v==null){continue;}
-            if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
-            Transition t = createTransition(activity,v);
+        	Transition t = createTransition(activity,v);
             if(t !=null){
             	ts.add(t);
                 Data data = new Data();
@@ -114,8 +112,7 @@ public class NeetTransitionActivityV4Manager extends BaseManager {
             for(Data data:datas){
             	View v = activity.findViewById(data.id);
             	if(v==null){continue;}
-            	if(v.getPaddingLeft()!=0||v.getPaddingTop()!=0||v.getPaddingRight()!=0||v.getPaddingBottom()!=0){continue;}
-                Transition t=createTransition(activity,v);
+            	Transition t=createTransition(activity,v);
             	if(t!=null){
             		ts.add(t);
                 }

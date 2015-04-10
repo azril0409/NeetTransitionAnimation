@@ -13,11 +13,12 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:scaleType="fitCenter"
+        android:padding="8dip"
         android:src="@drawable/icecream" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_marginLeft="8dip"
+        android:padding="8dip"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#A0FF0000"
