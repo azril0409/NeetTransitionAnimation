@@ -51,9 +51,9 @@ public class FragmentToFragmentFragment extends Fragment implements
 		super.onActivityResult(requestCode, resultCode, data);
 		manager.onActivityResult(requestCode, resultCode, data);
 	}
-
 	@Override
 	public void onDestroyView() {
 		manager.finish();
+		super.onDestroy();
 	}
 }

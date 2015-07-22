@@ -47,5 +47,6 @@ public class FragmentToFragmentFragment2 extends Fragment {
 	@Override
 	public void onDestroyView() {
 		manager.finish();
+		super.onDestroy();
 	}
 }
